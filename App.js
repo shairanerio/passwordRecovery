@@ -40,12 +40,13 @@ function PasswordRecovery({ navigation }) {
   );
 }
 
-function EnterOTP({ route }) {
+function EnterOTP({ route, navigation }) {
   const { email } = route.params;
   const [otp, setOtp] = useState('');
 
   const handleOtpSubmit = () => {
     console.log(`OTP entered: ${otp} for email: ${email}`);
+    navigation.navigate('NewPassword', { email });
   };
 
   return (
@@ -74,6 +75,56 @@ function EnterOTP({ route }) {
   );
 }
 
+function NewPassword({ route }) {
+  const { email } = route.params;
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handlePasswordReset = () => {
+    if (newPassword === confirmPassword) {
+      console.log(`Password reset successful for email: ${email}`);
+      // Handle password reset logic here (e.g., API call to update password)
+    } else {
+      console.log('Passwords do not match');
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <StatusBar style="auto" />
+      <View style={styles.headerSection}>
+        <Text style={styles.headerTitle}>Create New Password</Text>
+      </View>
+
+      <View style={styles.passwordSection}>
+        <Text style={styles.label}>New Password:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="New Password"
+          secureTextEntry
+          value={newPassword}
+          onChangeText={setNewPassword}
+        />
+      </View>
+
+      <View style={styles.passwordSection}>
+        <Text style={styles.label}>Confirm New Password:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm New Password"
+          secureTextEntry
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+        />
+      </View>
+
+      <TouchableOpacity style={styles.submitButton} onPress={handlePasswordReset}>
+        <Text style={styles.submitButtonText}>Reset Password</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
 export default function App() {
   return (
     <NavigationContainer>
@@ -88,6 +139,11 @@ export default function App() {
           component={EnterOTP} 
           options={{ headerShown: false }} 
         />
+        <Stack.Screen 
+          name="NewPassword" 
+          component={NewPassword} 
+          options={{ headerShown: false }} 
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -98,7 +154,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#8ecae6',
     alignItems: 'center',
-    paddingTop: 250,
+    paddingTop: 200,
   },
   headerSection: {
     marginBottom: 20,
@@ -137,6 +193,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   otpSection: {
+    width: '85%',
+    marginTop: 20,
+  },
+  passwordSection: {
     width: '85%',
     marginTop: 20,
   },
