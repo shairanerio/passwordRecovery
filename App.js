@@ -1,215 +1,66 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Provider as PaperProvider, TextInput, Button } from 'react-native-paper';
 
-const Stack = createStackNavigator();
-
-function PasswordRecovery({ navigation }) {
+const PasswordRecoveryScreen = () => {
   const [email, setEmail] = useState('');
 
-  const handlePasswordRecovery = () => {
-    console.log(`Password recovery initiated for email: ${email}`);
-    navigation.navigate('EnterOTP', { email });
+  const handleRecoverPassword = () => {
+    console.log('Recover Password pressed');
+  };
+
+  const handleUsePhoneNumber = () => {
+    console.log('Use Phone Number Instead pressed');
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <View style={styles.headerSection}>
-        <Text style={styles.headerTitle}>Password Recovery</Text>
-      </View>
+    <PaperProvider>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.recTitle}>Password Recovery</Text>
+        <TextInput label="Enter Email Address" value={email} onChangeText={setEmail} style={styles.input} keyboardType="email-address" autoCapitalize="none"/>
 
-      <View style={styles.emailSection}>
-        <Text style={styles.label}>Enter your email address:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Email Address"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          value={email}
-          onChangeText={setEmail}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.recoverButton} onPress={handlePasswordRecovery}>
-        <Text style={styles.recoverButtonText}>Recover Password</Text>
-      </TouchableOpacity>
-    </View>
+        <Button mode="contained" onPress={handleRecoverPassword} style={styles.recButton}>Recover Password</Button>
+        
+        <TouchableOpacity style={styles.pnButton} onPress={handleUsePhoneNumber}>
+          <Text style={styles.pnButtonText}>Use Phone Number Instead</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </PaperProvider>
   );
-}
-
-function EnterOTP({ route, navigation }) {
-  const { email } = route.params;
-  const [otp, setOtp] = useState('');
-
-  const handleOtpSubmit = () => {
-    console.log(`OTP entered: ${otp} for email: ${email}`);
-    navigation.navigate('NewPassword', { email });
-  };
-
-  return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <View style={styles.headerSection}>
-        <Text style={styles.headerTitle}>Enter OTP</Text>
-      </View>
-
-      <View style={styles.otpSection}>
-        <Text style={styles.label}>Enter the OTP sent to {email}:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="OTP"
-          keyboardType="number-pad"
-          autoCapitalize="none"
-          value={otp}
-          onChangeText={setOtp}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.submitButton} onPress={handleOtpSubmit}>
-        <Text style={styles.submitButtonText}>Submit OTP</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-function NewPassword({ route }) {
-  const { email } = route.params;
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const handlePasswordReset = () => {
-    if (newPassword === confirmPassword) {
-      console.log(`Password reset successful for email: ${email}`);
-      // Handle password reset logic here (e.g., API call to update password)
-    } else {
-      console.log('Passwords do not match');
-    }
-  };
-
-  return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <View style={styles.headerSection}>
-        <Text style={styles.headerTitle}>Create New Password</Text>
-      </View>
-
-      <View style={styles.passwordSection}>
-        <Text style={styles.label}>New Password:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="New Password"
-          secureTextEntry
-          value={newPassword}
-          onChangeText={setNewPassword}
-        />
-      </View>
-
-      <View style={styles.passwordSection}>
-        <Text style={styles.label}>Confirm New Password:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Confirm New Password"
-          secureTextEntry
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.submitButton} onPress={handlePasswordReset}>
-        <Text style={styles.submitButtonText}>Reset Password</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="PasswordRecovery">
-        <Stack.Screen 
-          name="PasswordRecovery" 
-          component={PasswordRecovery} 
-          options={{ headerShown: false }} 
-        />
-        <Stack.Screen 
-          name="EnterOTP" 
-          component={EnterOTP} 
-          options={{ headerShown: false }} 
-        />
-        <Stack.Screen 
-          name="NewPassword" 
-          component={NewPassword} 
-          options={{ headerShown: false }} 
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#8ecae6',
-    alignItems: 'center',
-    paddingTop: 200,
+    padding: 16,
   },
-  headerSection: {
-    marginBottom: 20,
-  },
-  headerTitle: {
-    fontWeight: 'bold',
+  recTitle: {
     fontSize: 25,
-  },
-  emailSection: {
-    width: '85%',
-    marginTop: 20,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 5,
-    color: '#333',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+    marginTop: 200,
   },
   input: {
-    borderWidth: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
+    marginBottom: 16,
+    backgroundColor: 'transparent',
+  },
+  recButton: {
     borderRadius: 10,
-    borderColor: 'black',
-    fontSize: 16,
-  },
-  recoverButton: {
-    marginTop: 30,
-    backgroundColor: '#AB644B',
-    borderRadius: 10,
-    paddingVertical: 15,
-    width: '75%',
-    alignItems: 'center',
-  },
-  recoverButtonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  otpSection: {
-    width: '85%',
     marginTop: 20,
-  },
-  passwordSection: {
-    width: '85%',
-    marginTop: 20,
-  },
-  submitButton: {
-    marginTop: 30,
     backgroundColor: '#AB644B',
-    borderRadius: 10,
-    paddingVertical: 15,
-    width: '75%',
+    textColor: "#fff",
+  },
+  pnButton: {
     alignItems: 'center',
+    marginTop: 30,
   },
-  submitButtonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
+  pnButtonText: {
+    color: '#696969',
+    textDecorationLine: 'underline',
+  }
 });
+
+export default PasswordRecoveryScreen;
